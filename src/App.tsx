@@ -1,18 +1,21 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
-import { Nav } from './components/Nav';
 import { SignUp } from './components/SignUp';
+import { Home } from './components/Home';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
     <>
-      <h1>Expenses App</h1>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Nav />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-      </BrowserRouter>
+      <UserProvider>
+        <h1>Expenses App</h1>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Routes>
+        </BrowserRouter>
+      </UserProvider>
     </>
   )
 }

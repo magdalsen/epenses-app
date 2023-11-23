@@ -23,8 +23,6 @@ export const SignUp = () => {
             .insert([
               { id: data.user?.id, name, email }
             ])
-            console.log(userData);
-            
             if (error != null) {
                 alert('Taki użytkownik już istnieje.');
                 throw error;
