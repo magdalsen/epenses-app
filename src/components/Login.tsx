@@ -2,6 +2,10 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom"
 import { supabase } from "../supabaseClient";
 import { useUserContext } from "../context/UserContext";
+import { Button, Input } from "@chakra-ui/react";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { schemaLogin } from "./validation/validation";
+import style from "./Login.module.css";
 
 interface LoginData {
     email: string;
@@ -10,7 +14,7 @@ interface LoginData {
 
 export const Login = () => {
     const navigate = useNavigate();
-    const { setIsLogged }=useUserContext();
+    const { setIsLogged, setId }=useUserContext();
 
     const loginUser = async (values:LoginData) => {
         const { email, password } = values;
@@ -22,6 +26,7 @@ export const Login = () => {
         if (data.user) {
             alert(`Witaj ${email}!`);
             setIsLogged(true);
+            setId(data.user.id);
             navigate('/');
         }
     }
@@ -31,7 +36,7 @@ export const Login = () => {
           email: '',
           password: '',
         },
-        // resolver: yupResolver(schemaSignup)
+        resolver: yupResolver(schemaLogin)
       });
       const onSubmit = (data: LoginData) => {
         loginUser(data);
@@ -40,18 +45,18 @@ export const Login = () => {
     return (
         <>
             <Link to={"/signup"}>
-                <button type="button">Zarejestruj się</button>
+                <Button colorScheme='blue' variant='solid' type="button">Sign up</Button>
             </Link>
-            <section>
+            <h2>Sign in</h2>
+            <section className={style.loginForm}>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <h2>Logowanie</h2>
                     <h3>E-mail</h3>
-                    <input {...register("email")} type="text" placeholder="E-mail" />
+                    <Input {...register("email")} type="text" placeholder="E-mail" />
                     <p>{errors.email?.message}</p>
-                    <h3>Hasło</h3>
-                    <input {...register("password")} type="password" placeholder="Hasło" />
+                    <h3>Password</h3>
+                    <Input {...register("password")} type="password" placeholder="Password" />
                     <p>{errors.password?.message}</p>
-                    <button type="submit">Zaloguj</button>
+                    <Button colorScheme='blue' variant='solid' type="submit">Login</Button>
                 </form>
             </section>
         </>

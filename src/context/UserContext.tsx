@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from "react";
 
 import { supabase } from "../supabaseClient";
 
@@ -6,14 +6,17 @@ import { getSafeContext } from "./getSafeContext";
 
 type UserContextProps={
     logOut: ()=>void;
-    setIsLogged: any;
+    setIsLogged: Dispatch<SetStateAction<boolean>>;
+    setId: (id:string)=>void;
     isLoggedIn: boolean;
+    userId: string;
 }
 
 export const UserContext=createContext<UserContextProps|null>(null)
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [isLoggedIn, setIsLogged] = useState(false);
+    const [userId, setId] = useState('');
     useEffect(()=>{
         console.log(isLoggedIn);
     })
@@ -36,7 +39,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     return (
-      <UserContext.Provider value={{ setIsLogged, isLoggedIn, logOut }}>
+      <UserContext.Provider value={{ setIsLogged, isLoggedIn, logOut, setId, userId }}>
         {children}
       </UserContext.Provider>
     );
