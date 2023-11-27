@@ -25,3 +25,8 @@ export const schemaLogin = yup.object({
       .oneOf([yup.ref('password')], 'Must match "password" field value')
       .required('Confirm password required!'),
   }).required();
+
+  export const schemaAddMonth = yup.object({
+    income: yup.number().positive().required(),
+    month: yup.string().required("Please select a month"),
+  }).required();

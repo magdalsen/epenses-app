@@ -5,6 +5,7 @@ import { Button, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/reac
 import moment from "moment";
 import style from "./LoggedIn.module.css";
 import { Link } from "react-router-dom";
+import { AddMonthModal } from "./AddMonthModal";
 
 interface IncomeData {
     id: string;
@@ -27,6 +28,7 @@ export const LoggedIn = () => {
     const [income, setIncome] = useState([]);
     const [years, setYears] = useState<number[]>([]);
     const [expenses, setExpenses] = useState([]);
+    const arr: number[] = []
 
     const formatDate = (data:ExpensesData) => {
         const dateArr: number[] = [];
@@ -77,7 +79,7 @@ export const LoggedIn = () => {
 
     return (
         <>
-            <Button colorScheme='blue' variant='solid' type="submit" onClick={()=>alert('Nothing yet:)')}>Add month</Button>
+            <AddMonthModal />
             <Button colorScheme='blue' variant='outline' type="submit" onClick={()=>logOut()}>Logout</Button>
             <div>You are logged in.</div>
 
@@ -89,31 +91,32 @@ export const LoggedIn = () => {
                 </TabList>
                 <TabPanels>
                 {years.map((year)=>(
-                    <div>
                     <div className={style.expenseBox_1}>
-                        {income.map((incomeYear:IncomeData)=>(
-                            <TabPanel>
-                                {incomeYear.year === year ?
+                        {income.filter((el:IncomeData)=>
+                                el.year === year
+                        ).map((elel:IncomeData)=>{
+                            return (
                                 <div className={style.expenseBox}>
-                                    <div>{incomeYear.monthName}</div>
-                                    <div>Income: {incomeYear.monthIncome} zł</div>
-                                    <div>
-                                         Expenses: {expenses.map((exp:ExpensesData)=>(
-                                                     <>
-                                                        {(exp.created_at).includes(year.toString()) && (exp.created_at).includes(incomeYear.monthName) ? <div>
-                                                            <div>{exp.productPrice} zł</div>
-                                                            <Link to={`/expenseDetails/${incomeYear.monthName}-${year.toString()}`}>
-                                                                <Button colorScheme="blue" variant="solid" type="button">Details</Button>
-                                                            </Link>
-                                                            </div> : ''}
-                                                     </>
-                                                   ))}    
-                                    </div>
-                                </div> : ''}
-
-                            </TabPanel>
-                        ))}
-                    </div>
+                                    <TabPanel>
+                                        <div>{elel.monthName}</div>
+                                        <div>Income: {elel.monthIncome} zł</div>
+                                        <div>Expenses: {expenses.filter((exp:ExpensesData)=>
+                                            (exp.created_at).includes(year.toString()) && (exp.created_at).includes(elel.monthName)
+                                        ).map((elel2:ExpensesData)=>{
+                                            return (
+                                                <>
+                                                    <div>{elel2.productPrice}</div>
+                                                    <Link to={`/expenseDetails/${elel.monthName}-${year.toString()}`}>
+                                                        <Button colorScheme="blue" variant="solid" type="button">Details</Button>
+                                                    </Link>
+                                                </>
+                                                
+                                            )
+                                        })}</div>
+                                    </TabPanel> 
+                                </div>
+                            )
+                        })}
                     </div>
                 ))}
                 </TabPanels>

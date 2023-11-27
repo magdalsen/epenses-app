@@ -22,9 +22,9 @@ export const Login = () => {
             email: email,
             password: password,
         })
-        if (error) alert('Błąd logowania.');
+        if (error) alert(`Login error: ${error}`);
         if (data.user) {
-            alert(`Witaj ${email}!`);
+            alert(`Hello ${email}!`);
             setIsLogged(true);
             setId(data.user.id);
             navigate('/');
