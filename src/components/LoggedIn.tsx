@@ -28,7 +28,6 @@ export const LoggedIn = () => {
     const [income, setIncome] = useState([]);
     const [years, setYears] = useState<number[]>([]);
     const [expenses, setExpenses] = useState([]);
-    const arr: number[] = []
 
     const formatDate = (data:ExpensesData) => {
         const dateArr: number[] = [];
@@ -83,7 +82,7 @@ export const LoggedIn = () => {
             <Button colorScheme='blue' variant='outline' type="submit" onClick={()=>logOut()}>Logout</Button>
             <div>You are logged in.</div>
 
-            <Tabs variant='enclosed'>
+            <Tabs variant='enclosed' maxW='800px'>
                 <TabList>
                     {years.map((year)=>(
                         <Tab>{year}</Tab>
@@ -91,22 +90,23 @@ export const LoggedIn = () => {
                 </TabList>
                 <TabPanels>
                 {years.map((year)=>(
-                    <div className={style.expenseBox_1}>
+                    <div className={style.expenseBox_container}>
                         {income.filter((el:IncomeData)=>
                                 el.year === year
-                        ).map((elel:IncomeData)=>{
+                        ).map((income:IncomeData)=>{
                             return (
                                 <div className={style.expenseBox}>
                                     <TabPanel>
-                                        <div>{elel.monthName}</div>
-                                        <div>Income: {elel.monthIncome} zł</div>
+                                        <div>{income.monthName}</div>
+                                        <div>Income: {income.monthIncome} zł</div>
                                         <div>Expenses: {expenses.filter((exp:ExpensesData)=>
-                                            (exp.created_at).includes(year.toString()) && (exp.created_at).includes(elel.monthName)
-                                        ).map((elel2:ExpensesData)=>{
+                                            (exp.created_at).includes(year.toString()) && (exp.created_at).includes(income.monthName)
+                                        ).map((exp:ExpensesData)=>{
                                             return (
                                                 <>
-                                                    <div>{elel2.productPrice}</div>
-                                                    <Link to={`/expenseDetails/${elel.monthName}-${year.toString()}`}>
+                                                    {/* tutaj mam problem który nie wiem jak rozwiązać, bo chciałabym aby wyświetlała mi się SUMA exp.productPrice, teraz przy mapowaniu te wartości się listują */}
+                                                    <div>{exp.productPrice}</div>
+                                                    <Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>
                                                         <Button colorScheme="blue" variant="solid" type="button">Details</Button>
                                                     </Link>
                                                 </>

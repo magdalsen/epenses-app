@@ -6,7 +6,7 @@ import "./Signup.module.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaSignup } from "./validation/validation";
 
-interface SignupData {
+export interface SignupData {
     name: string;
     email: string;
     password: string;
