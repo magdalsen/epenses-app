@@ -1,7 +1,12 @@
 import { useForm } from "react-hook-form";
 import { supabase } from "../supabaseClient";
+import { Button, Input } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import "./Signup.module.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { schemaSignup } from "./validation/validation";
 
-interface SignupData {
+export interface SignupData {
     name: string;
     email: string;
     password: string;
@@ -24,10 +29,10 @@ export const SignUp = () => {
               { id: data.user?.id, name, email }
             ])
             if (error != null) {
-                alert('Taki użytkownik już istnieje.');
+                alert('User already exist.');
                 throw error;
             };
-            if (userData === null) alert('Rejestracja przebiegła pomyślnie!');
+            if (userData === null) alert('Success! Account created!');
         }
     }
 
@@ -38,7 +43,7 @@ export const SignUp = () => {
           password: '',
           confirm: ''
         },
-        // resolver: yupResolver(schemaSignup)
+        resolver: yupResolver(schemaSignup)
       });
       const onSubmit = (data: SignupData) => {
         addUser(data);
@@ -46,15 +51,19 @@ export const SignUp = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <input {...register("name")} type="text" placeholder="Imię" />
+            <h2>Sign up</h2>
+            <Input {...register("name")} type="text" placeholder="Name" />
             <p>{errors.name?.message}</p>
-            <input {...register("email")} type="text" placeholder="E-mail" />
+            <Input {...register("email")} type="text" placeholder="E-mail" />
             <p>{errors.email?.message}</p>
-            <input {...register("password")} type="password" placeholder="Hasło" />
+            <Input {...register("password")} type="password" placeholder="Password" />
             <p>{errors.password?.message}</p>
-            <input {...register("confirm")} type="password" placeholder="Powtórz hasło" />
+            <Input {...register("confirm")} type="password" placeholder="Repeat password" />
             <p>{errors.confirm?.message}</p>
-            <button type="submit">Zarejestruj</button>
+            <Button colorScheme='blue' variant='solid' type="submit">Sign up</Button>
+            <Link to={'/'}>
+                <Button colorScheme='blue' variant='outline' type="submit">Back</Button>
+            </Link>
         </form>
     )
 }
