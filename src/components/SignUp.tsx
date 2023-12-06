@@ -1,40 +1,15 @@
 import { useForm } from "react-hook-form";
-import { supabase } from "../supabaseClient";
-import { Button, Input } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import "./Signup.module.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaSignup } from "./validation/validation";
-
-export interface SignupData {
-    name: string;
-    email: string;
-    password: string;
-    confirm: string;
-}
+import { addUser } from "../api/api";
+import { SignupData } from "./constans/types";
+import { BackButton, SubmitButton } from "./common/Buttons";
+import { InputField } from "./common/Inputs";
+import { buttonData } from "./constans/constans";
 
 export const SignUp = () => {
-
-    const addUser = async (values:SignupData) => {
-        const { name, email, password } = values;
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        })
-        if (error) throw error;
-        if (data && data.user) {
-            const { data:userData, error } = await supabase
-            .from('users')
-            .insert([
-              { id: data.user?.id, name, email }
-            ])
-            if (error != null) {
-                alert('User already exist.');
-                throw error;
-            };
-            if (userData === null) alert('Success! Account created!');
-        }
-    }
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignupData>({
         defaultValues: {
@@ -49,20 +24,43 @@ export const SignUp = () => {
         addUser(data);
       }
 
+      const inputData = {
+        nameData: {
+          type: "text",
+          text: "Name",
+          register: {...register("name")}
+        },
+        emailData: {
+          type: "text",
+          text: "E-mail",
+          register: {...register("email")}
+        },
+        passwordData: {
+          type: "password",
+          text: "Password",
+          register: {...register("password")}
+        },
+        confirmData: {
+          type: "password",
+          text: "Repeat password",
+          register: {...register("confirm")}
+        }
+      }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <h2>Sign up</h2>
-            <Input {...register("name")} type="text" placeholder="Name" />
+            <InputField value={inputData.nameData} />
             <p>{errors.name?.message}</p>
-            <Input {...register("email")} type="text" placeholder="E-mail" />
+            <InputField value={inputData.emailData} />
             <p>{errors.email?.message}</p>
-            <Input {...register("password")} type="password" placeholder="Password" />
+            <InputField value={inputData.passwordData} />
             <p>{errors.password?.message}</p>
-            <Input {...register("confirm")} type="password" placeholder="Repeat password" />
+            <InputField value={inputData.confirmData} />
             <p>{errors.confirm?.message}</p>
-            <Button colorScheme='blue' variant='solid' type="submit">Sign up</Button>
+            <SubmitButton value={buttonData.signupButton} />
             <Link to={'/'}>
-                <Button colorScheme='blue' variant='outline' type="submit">Back</Button>
+                <BackButton value={buttonData.backButton} />
             </Link>
         </form>
     )

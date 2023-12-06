@@ -2,48 +2,19 @@ import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButt
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react"
 import { useForm } from "react-hook-form";
-import { months } from "./constans/constans";
-import { supabase } from "../supabaseClient";
+import { buttonData, months } from "./constans/constans";
 import { useUserContext } from "../context/UserContext";
 import { schemaAddMonth } from "./validation/validation";
-
-interface AddMonthData {
-    month: string;
-    income: number;
-}
+import { addMonth } from "../api/api";
+import { AddMonthData } from "./constans/types";
+import { SaveButton } from "./common/Buttons";
+import { todayDate } from "./utils/utils";
 
 export const AddMonthModal = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { userId }=useUserContext();
-    const todayDate = new Date().getFullYear();
   
     const initialRef = React.useRef(null);
-
-    const addMonth = async (values:AddMonthData) => {
-        const dbData: (string | string[])[] = [];
-        const valuesData = (values.month).concat(todayDate.toString());
-        const { data, error } = await supabase
-        .from('income')
-        .select('incomeId, monthName, year')
-        if (error) throw error;
-        data.map(async (el: { monthName: string; year: number; })=>{
-            dbData.push((el.monthName).concat(el.year.toString()));
-        })
-        const check = dbData.includes(valuesData);
-        if (check) {
-            alert('Month already exist!');
-            return
-        } else {
-            const { data2, error2 } = await supabase
-                .from('income')
-                .insert([
-                  { id: userId, incomeId: data.length+1, monthIncome: values.income, monthName: values.month, year: new Date().getFullYear() }
-                ])
-                if (error2) throw error2;
-                alert('Month added!');
-                return data2;
-        }
-    }
 
     const { register, handleSubmit, formState: { errors } } = useForm<AddMonthData>({
         defaultValues: {
@@ -53,7 +24,7 @@ export const AddMonthModal = () => {
         resolver: yupResolver(schemaAddMonth)
       });
       const onSubmit = (data: AddMonthData) => {
-        addMonth(data);
+        addMonth(data, userId, todayDate);
       }
   
     return (
@@ -87,9 +58,7 @@ export const AddMonthModal = () => {
                         <p>{errors.income?.message}</p>
                     </FormControl>
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} variant='solid' type="submit">
-                            Save
-                        </Button>
+                        <SaveButton value={buttonData.saveButton} />
                         <Button onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </form>

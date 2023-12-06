@@ -37,3 +37,26 @@ export const months = [
         month: "December"
     }
 ]
+
+export const buttonData = {
+    signupButton: {
+        variant: "solid",
+        text: "Sign up"
+    },
+    signinButton: {
+        variant: "solid",
+        text: "Login"
+    },
+    backButton: {
+        variant: "outline",
+        text: "Back"
+    },
+    detailsButton: {
+        variant: "solid",
+        text: "Details"
+    },
+    saveButton: {
+        variant: "solid",
+        text: "Save"  
+    }
+}
