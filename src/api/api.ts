@@ -1,4 +1,5 @@
-import { AddMonthData, LoginData, SignupData } from "../components/constans/types";
+import { AddExpenseData, AddMonthData, LoginData, SignupData } from "../components/constans/types";
+import { calculateDateForEachMonth } from "../components/utils/utils";
 import { supabase } from "../supabaseClient";
 
 export const addUser = async (values:SignupData) => {
@@ -81,4 +82,25 @@ export const addMonth = async (values:AddMonthData, userId: string, todayDate: n
             alert('Month added!');
             return data2;
     }
+}
+
+export const addExpense = async (values:AddExpenseData, userId: string, idFormat: string | undefined) => {
+    const { data, error } = await supabase
+    .from('expenses')
+    .insert({ id: userId, productCategory: values.expense, productPrice: values.price, created_at: calculateDateForEachMonth(idFormat) })
+    .select()
+    if (error) throw error;
+    if (data) {
+        alert('Expense added!');
+    }
+}
+
+export const updateExpense = async (values: AddExpenseData, editExpense: string) => {
+    const { data, error } = await supabase
+    .from('expenses')
+    .update({ productCategory: values.expense, productPrice: values.price })
+    .eq('productCategory', editExpense)
+    .select()
+    if (error) throw error;
+    return data;
 }

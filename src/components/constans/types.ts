@@ -23,11 +23,15 @@ export interface ExpensesData {
     created_at: string;
     id: string;
     productCategory: string;
-    productId: string;
     productPrice: number;
 }
 
 export interface AddMonthData {
     month: string;
     income: number;
+}
+
+export interface AddExpenseData {
+    expense: string;
+    price: number;
 }

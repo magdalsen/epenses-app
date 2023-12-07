@@ -1,5 +1,6 @@
 import moment from "moment";
 import { ExpensesData } from "../constans/types";
+import { monthsListed } from "../constans/constans";
 
 export const formatDate = (data:ExpensesData[]) => {
     const dateArr: number[] = [];
@@ -21,3 +22,17 @@ export const expensesGetYear = (data:any) => {
 }
 
 export const todayDate = new Date().getFullYear();
+
+export const calculateDateForEachMonth = (idFormat: string | undefined) => {
+    const todayDate = new Date();
+    const separateDate = idFormat?.split(" ");
+    separateDate[0] = monthsListed.indexOf(separateDate[0]);
+    todayDate.setMonth(separateDate[0]);
+    todayDate.setFullYear(Number(separateDate[1]));
+    return todayDate.toISOString();
+}
+
+export const createPureMonthAndYearDataFormat = (exp: ExpensesData) => {
+    const sliced = (exp.created_at).split(" ");
+    return sliced[0] + " " + sliced[2];
+}

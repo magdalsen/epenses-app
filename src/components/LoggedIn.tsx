@@ -7,7 +7,7 @@ import { AddMonthModal } from "./AddMonthModal";
 import { IncomeData, ExpensesData } from "./constans/types";
 import { fetchDataByRow, fetchUserData } from "../api/api";
 import { ConfirmButton } from "./common/Buttons";
-import { expensesGetYear, formatDate } from "./utils/utils";
+import { createPureMonthAndYearDataFormat, expensesGetYear, formatDate } from "./utils/utils";
 import { buttonData } from "./constans/constans";
 
 export const LoggedIn = () => {
@@ -35,9 +35,7 @@ export const LoggedIn = () => {
     const expensesNullFilter = (year: number, income: IncomeData) => {
         return expenses.filter((exp:ExpensesData)=>
                     {
-                        const sliced = (exp.created_at).split(" ");
-                        const yearMerged = sliced[0] + " " + sliced[2];
-                        return !(yearMerged).includes(income.monthName + " " + year.toString())
+                        return !(createPureMonthAndYearDataFormat(exp)).includes(income.monthName + " " + year.toString())
                     }
                 ).map((_exp:ExpensesData,i,array)=>{
                     return (

@@ -1,0 +1,19 @@
+.container {
+    /* max-width: 1440px; */
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 50px 150px 100px 200px;
+    grid-template-rows: repeat(2, 100px);
+}
+
+h2 {
+    margin: 0 0 50px 0;
+}
+
+.expensesBox {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
