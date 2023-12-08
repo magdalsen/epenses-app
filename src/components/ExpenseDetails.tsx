@@ -30,7 +30,7 @@ export const ExpenseDetails = () => {
         })
     }
     const addProductArrLength = productArrayLength()[productArrayLength().length-1];
-    const productLabelAdd = id + "-" + addProductArrLength;
+    const productLabelAdd = id + "-" + (addProductArrLength === undefined ? '1' : addProductArrLength);
     const productLabelUpdate = editId;
     
     const { register, handleSubmit, formState: { errors } } = useForm<AddExpenseData>({
