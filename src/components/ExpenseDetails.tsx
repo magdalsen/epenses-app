@@ -20,6 +20,18 @@ export const ExpenseDetails = () => {
     const idFormat = id?.replace('-',' ');
     const [ editExpense, setEditExpens ] = useState('');
     const [ editPrice, setEditPrice] = useState(0);
+    const [ editId, setEditId ] = useState('');
+
+    const productArrayLength = () => {
+        return expenses.filter((exp:ExpensesData)=>{
+            return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
+        }).map((_expens:ExpensesData,i)=>{
+            return i+2
+        })
+    }
+    const addProductArrLength = productArrayLength()[productArrayLength().length-1];
+    const productLabelAdd = id + "-" + addProductArrLength;
+    const productLabelUpdate = editId;
     
     const { register, handleSubmit, formState: { errors } } = useForm<AddExpenseData>({
         defaultValues: {
@@ -28,11 +40,11 @@ export const ExpenseDetails = () => {
         },
         resolver: yupResolver(schemaAddExpense)
       });
-      const onSubmit = (data: AddExpenseData) => {
-        addExpense(data, userId, idFormat);
+      const onSubmit = (data: AddExpenseData) => {        
+        addExpense(data, userId, idFormat, productLabelAdd);
       }
       const onEdit = (data: AddExpenseData) => {
-        updateExpense(data, editExpense).then((returnedData)=>{
+        updateExpense(data, editExpense, productLabelUpdate).then((returnedData)=>{
             setEditExpens(returnedData[0].productCategory);
             setEditPrice(returnedData[0].productPrice);
         });
@@ -41,23 +53,23 @@ export const ExpenseDetails = () => {
     const expensesFilter = () => {
         return expenses.filter((exp:ExpensesData)=>{
             return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
-        }).map((expens:ExpensesData,i)=>{
+        }).map((expens:ExpensesData)=>{   
+            const splited = (expens.productLabel).split("-");                  
             return (
                 <>
-                    <form onSubmit={handleSubmit(onEdit)} className={style.expensesBox}>
-                        <div>{i+1}</div>
-                        <div>{editExpense === expens.productCategory ? <InputField value={inputData.expenseData} /> : expens.productCategory}</div>
-                        <div>{editPrice === expens.productPrice ? <InputField value={inputData.priceData} /> : expens.productPrice} zł</div>
+                        <div>{splited[2]}</div>
+                        <div>{editExpense === expens.productCategory && editId === expens.productLabel ? <InputField value={inputData.expenseData} /> : expens.productCategory}</div>
+                        <div>{editPrice === expens.productPrice && editId === expens.productLabel ? <InputField value={inputData.priceData} /> : expens.productPrice} zł</div>
                         <div>
-                            {editExpense === expens.productCategory || editPrice === expens.productPrice ?
+                            {(editExpense === expens.productCategory || editPrice === expens.productPrice) && editId === expens.productLabel ?
                             <SubmitButton value={buttonData.saveButton} /> :
-                            <Button colorScheme="blue" type="button" onClick={()=>{
+                            <Button colorScheme="yellow" type="button" onClick={()=>{
                                 setEditExpens(expens.productCategory);
                                 setEditPrice(expens.productPrice);
+                                setEditId(expens.productLabel);
                             }}>Edit</Button>
                             }
                             <SubmitButton value={buttonData.deleteButton} /></div>
-                    </form>
                 </>
             )
         })
@@ -81,7 +93,7 @@ export const ExpenseDetails = () => {
             setExpenses(expensesGetYear(data));
         });
     },[]);
-    
+
     return (
         <>
             <h2>Details for {idFormat}</h2>
@@ -100,12 +112,14 @@ export const ExpenseDetails = () => {
                 </div>
                 <div>
                     <h3>Your expenses</h3>
-                    <div className={style.container}>
+                    <div>
+                        <div className={style.container}>
                             <div>Id</div>
                             <div>Category</div>
                             <div>Price</div>
                             <div>Buttons</div>
-                            {expensesFilter()}
+                        </div>
+                        <form onSubmit={handleSubmit(onEdit)} className={style.container}>{expensesFilter()}</form>
                     </div>
                 </div>
             </section>

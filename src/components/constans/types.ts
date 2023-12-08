@@ -24,6 +24,7 @@ export interface ExpensesData {
     id: string;
     productCategory: string;
     productPrice: number;
+    productLabel: string;
 }
 
 export interface AddMonthData {

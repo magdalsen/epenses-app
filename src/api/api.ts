@@ -84,10 +84,10 @@ export const addMonth = async (values:AddMonthData, userId: string, todayDate: n
     }
 }
 
-export const addExpense = async (values:AddExpenseData, userId: string, idFormat: string | undefined) => {
+export const addExpense = async (values:AddExpenseData, userId: string, idFormat: string | undefined, productLabel: string) => {
     const { data, error } = await supabase
     .from('expenses')
-    .insert({ id: userId, productCategory: values.expense, productPrice: values.price, created_at: calculateDateForEachMonth(idFormat) })
+    .insert({ id: userId, productCategory: values.expense, productPrice: values.price, created_at: calculateDateForEachMonth(idFormat), productLabel: productLabel })
     .select()
     if (error) throw error;
     if (data) {
@@ -95,12 +95,13 @@ export const addExpense = async (values:AddExpenseData, userId: string, idFormat
     }
 }
 
-export const updateExpense = async (values: AddExpenseData, editExpense: string) => {
+export const updateExpense = async (values: AddExpenseData, editExpense: string, id: string | undefined) => {
     const { data, error } = await supabase
     .from('expenses')
     .update({ productCategory: values.expense, productPrice: values.price })
-    .eq('productCategory', editExpense)
+    .eq('productLabel', id)
     .select()
     if (error) throw error;
+    console.log(data);
     return data;
 }
