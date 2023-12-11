@@ -30,6 +30,7 @@ export interface ExpensesData {
 export interface AddMonthData {
     month: string;
     income: number;
+    year: number;
 }
 
 export interface AddExpenseData {

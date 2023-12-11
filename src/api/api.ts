@@ -58,9 +58,9 @@ export const fetchUserData = async (userId:string) => {
     }
 }
 
-export const addMonth = async (values:AddMonthData, userId: string, todayDate: number) => {
+export const addMonth = async (values:AddMonthData, userId: string) => {
     const dbData: (string | string[])[] = [];
-    const valuesData = (values.month).concat(todayDate.toString());
+    const valuesData = (values.month).concat((values.year).toString());
     const { data, error } = await supabase
     .from('income')
     .select('incomeId, monthName, year')
@@ -76,7 +76,7 @@ export const addMonth = async (values:AddMonthData, userId: string, todayDate: n
         const { data2, error2 } = await supabase
             .from('income')
             .insert([
-              { id: userId, incomeId: data.length+1, monthIncome: values.income, monthName: values.month, year: new Date().getFullYear() }
+              { id: userId, incomeId: data.length+1, monthIncome: values.income, monthName: values.month, year: values.year }
             ])
             if (error2) throw error2;
             alert('Month added!');

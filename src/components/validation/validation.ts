@@ -29,6 +29,7 @@ export const schemaLogin = yup.object({
   export const schemaAddMonth = yup.object({
     income: yup.number().positive().required(),
     month: yup.string().required("Please select a month"),
+    year: yup.number().positive().required(),
   }).required();
 
   export const schemaAddExpense = yup.object({
