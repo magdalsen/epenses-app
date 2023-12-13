@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { addExpense, fetchDataByRow, updateExpense } from "../api/api";
+import { addExpense, fetchDataByRow, handleDelete, updateExpense } from "../api/api";
 import { useUserContext } from "../context/UserContext";
-import { createPureMonthAndYearDataFormat, expensesGetYear } from "./utils/utils";
+import { createPureMonthAndYearDataFormat, expensesGetYear, productArrayLength } from "./utils/utils";
 import { AddExpenseData, ExpensesData } from "./constans/types";
 import style from './ExpenseDetails.module.css';
 import { ConfirmButton, SubmitButton } from "./common/Buttons";
@@ -22,17 +22,10 @@ export const ExpenseDetails = () => {
     const [ editPrice, setEditPrice] = useState(0);
     const [ editId, setEditId ] = useState('');
 
-    const productArrayLength = () => {
-        return expenses.filter((exp:ExpensesData)=>{
-            return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
-        }).map((_expens:ExpensesData,i)=>{
-            return i+2
-        })
-    }
-    const addProductArrLength = productArrayLength()[productArrayLength().length-1];
+    const addProductArrLength = productArrayLength(expenses, idFormat)[productArrayLength(expenses, idFormat).length-1];
     const productLabelAdd = id + "-" + (addProductArrLength === undefined ? '1' : addProductArrLength);
     const productLabelUpdate = editId;
-    
+
     const { register, handleSubmit, formState: { errors } } = useForm<AddExpenseData>({
         defaultValues: {
           expense: '',
@@ -40,7 +33,9 @@ export const ExpenseDetails = () => {
         },
         resolver: yupResolver(schemaAddExpense)
       });
-      const onSubmit = (data: AddExpenseData) => {        
+      const onSubmit = (data: AddExpenseData) => {  
+        console.log(productLabelAdd);
+             //muszę zmodyfikować sposób dodawania wydatków aby przed dodaniem sprawdzić czy wydated o dodawanym id (u mnie productLabel) istnieje już w bazie, jeśli tak to do id dodać np. +1 bo teraz sprawdzamy tylko długość array w bazie i na tej podstawie id zwiększa się o +1
         addExpense(data, userId, idFormat, productLabelAdd);
       }
       const onEdit = (data: AddExpenseData) => {
@@ -69,7 +64,7 @@ export const ExpenseDetails = () => {
                                 setEditId(expens.productLabel);
                             }}>Edit</Button>
                             }
-                            <SubmitButton value={buttonData.deleteButton} /></div>
+                            <Button colorScheme="red" type="button" onClick={()=>handleDelete(expens.productLabel)} >Delete</Button></div>
                 </>
             )
         })

@@ -105,3 +105,15 @@ export const updateExpense = async (values: AddExpenseData, editExpense: string,
     console.log(data);
     return data;
 }
+
+export const handleDelete = async (productLabel: string) => {     
+    const { error } = await supabase
+    .from('expenses')
+    .delete()
+    .eq('productLabel', productLabel)
+    if (error) {
+        throw error;
+    } else {
+        alert('Expense removed!');
+    }
+}

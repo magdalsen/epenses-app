@@ -36,3 +36,11 @@ export const createPureMonthAndYearDataFormat = (exp: ExpensesData) => {
     const sliced = (exp.created_at).split(" ");
     return sliced[0] + " " + sliced[2];
 }
+
+export const productArrayLength = (expenses: ExpensesData[], idFormat: string) => {
+    return expenses.filter((exp:ExpensesData)=>{
+        return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
+    }).map((_expens:ExpensesData,i)=>{
+        return i+2
+    })
+}
