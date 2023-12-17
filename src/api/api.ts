@@ -102,7 +102,7 @@ export const updateExpense = async (values: AddExpenseData, editExpense: string,
     .eq('productLabel', id)
     .select()
     if (error) throw error;
-    console.log(data);
+    alert('Data updated!')
     return data;
 }
 
