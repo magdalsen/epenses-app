@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AddExpenseData, ExpensesData } from "./constans/types";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,21 +7,19 @@ import { fetchDataByRow, handleDelete, updateExpense } from "../api/api";
 import { useUserContext } from "../context/UserContext";
 import { createPureMonthAndYearDataFormat, expensesGetYear } from "./utils/utils";
 import { Button } from "@chakra-ui/react";
-import { SubmitButton } from "./common/Buttons";
+import { ConfirmButton, SubmitButton } from "./common/Buttons";
 import { buttonData } from "./constans/constans";
 import { InputField } from "./common/Inputs";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const EditForm = () => {
-    const [ editExpense, setEditExpens ] = useState('');
-    const [ editPrice, setEditPrice] = useState(0);
-    const [ editId, setEditId ] = useState('');
     const { userId }=useUserContext();
-    const [expenses, setExpenses] = useState([]);
+    const queryClient = useQueryClient();
     const {id} = useParams();
-    const idFormat = id?.replace('-',' ');
-
-    const productLabelUpdate = editId;
+    const navigate = useNavigate();
+    const idFormat = id?.replace(/-/g, ' ').slice(0,-1).trim();
+    const idToDetails = id?.replace(' ', '-').slice(0,-2);
 
     const { register, handleSubmit } = useForm<AddExpenseData>({
         defaultValues: {
@@ -32,10 +29,7 @@ export const EditForm = () => {
         resolver: yupResolver(schemaAddExpense)
       });
     const onEdit = (data: AddExpenseData) => {
-        updateExpense(data, editExpense, productLabelUpdate).then((returnedData)=>{
-            setEditExpens(returnedData[0].productCategory);
-            setEditPrice(returnedData[0].productPrice);
-        });
+        mutation.mutate(data);
       }
 
       const inputData = {
@@ -54,36 +48,94 @@ export const EditForm = () => {
     const expensesFilter = () => {
         return expenses.filter((exp:ExpensesData)=>{
             return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
-        }).map((expens:ExpensesData,i)=>{                    
+            
+        }).map((expens:ExpensesData,i: number)=>{   
             return (
                 <>
                         <div>{i+1}</div>
-                        <div>{editExpense === expens.productCategory && editId === expens.productLabel ? <InputField value={inputData.expenseData} /> : expens.productCategory}</div>
-                        <div>{editPrice === expens.productPrice && editId === expens.productLabel ? <InputField value={inputData.priceData} /> : expens.productPrice} zł</div>
+                        <div>{expens.productLabel === id ? <InputField value={inputData.expenseData} /> : expens.productCategory}</div>
+                        <div>{expens.productLabel === id ? <><InputField value={inputData.priceData} /></> : expens.productPrice} zł</div>
                         <div>
-                            {(editExpense === expens.productCategory || editPrice === expens.productPrice) && editId === expens.productLabel ?
-                            <SubmitButton value={buttonData.saveButton} /> :
-                            <Button colorScheme="yellow" type="button" onClick={()=>{
-                                setEditExpens(expens.productCategory);
-                                setEditPrice(expens.productPrice);
-                                setEditId(expens.productLabel);
-                            }}>Edit</Button>
-                            }
-                            <Button colorScheme="red" type="button" onClick={()=>handleDelete(expens.productLabel)} >Delete</Button></div>
+                            {expens.productLabel === id ? <SubmitButton value={buttonData.saveButton} /> :
+                            <Link to={`/expenseDetails/${expens.productLabel}/edit`}>
+                                <Button colorScheme="yellow" type="button" >Edit</Button>
+                            </Link>}
+                            <Button colorScheme="red" type="button" onClick={()=>mutationDelete.mutate(expens.productLabel)} >Delete</Button></div>
                 </>
             )
         })
     }
 
-    useEffect(()=>{
-        fetchDataByRow(userId).then((data)=>{
-            setExpenses(expensesGetYear(data));
-        });
-    },[]);
+    const { data:expenses, isLoading, error } = useQuery({
+        queryKey: ['expenses'],
+        queryFn: () => fetchDataByRow(userId).then((data)=>{
+            return expensesGetYear(data)
+        })
+    })
+    const mutation = useMutation({
+        mutationFn: async (values:AddExpenseData) => {
+          await updateExpense(values, id);
+          navigate(`/expenseDetails/${idToDetails}`);
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['expenses'] })
+        },
+        onError: () => {
+          throw new Error("Something went wrong :(");
+        }
+      })
+
+    const mutationDelete = useMutation({
+        mutationFn: (value:string) => {
+          return handleDelete(value);
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['expenses'] })
+        },
+        onError: () => {
+          throw new Error("Something went wrong :(");
+        }
+      })
+
+    if (isLoading) {
+        return <div>Loading...</div>
+      }
+    if (error) {
+        return <div>Error! Contact with administrator.</div>
+    }
     
     return (
         <>
-            <form onSubmit={handleSubmit(onEdit)} className={style.container}>{expensesFilter()}</form>
+            <h2>Details for {idFormat}</h2>
+            <section className={style.expensesBox}>
+                <div>
+                    <h3>Add expense</h3>
+                    <form>
+                        <h3>Add expense category:</h3>
+                        <InputField value={inputData.expenseData} />
+                        <p></p>
+                        <h3>Add price:</h3>
+                        <InputField value={inputData.priceData} />
+                        <p></p>
+                        <Button type='button' colorScheme="green" onClick={()=>alert('Firstly finish edit!')}>Add</Button>
+                    </form>
+                </div>
+                <div>
+                    <h3>Your expenses</h3>
+                    <div>
+                        <form onSubmit={handleSubmit(onEdit)} className={style.container}>
+                            <div>Id</div>
+                            <div>Category</div>
+                            <div>Price</div>
+                            <div>Buttons</div>
+                            {expensesFilter()}
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <Link to={`/expenseDetails/${idToDetails}`}>
+                <ConfirmButton value={buttonData.backButton} />
+            </Link>
         </>
     )
 }

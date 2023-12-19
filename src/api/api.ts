@@ -92,10 +92,11 @@ export const addExpense = async (values:AddExpenseData, userId: string, idFormat
     if (error) throw error;
     if (data) {
         alert('Expense added!');
+        return data;
     }
 }
 
-export const updateExpense = async (values: AddExpenseData, editExpense: string, id: string | undefined) => {
+export const updateExpense = async (values: AddExpenseData, id: string | undefined) => {
     const { data, error } = await supabase
     .from('expenses')
     .update({ productCategory: values.expense, productPrice: values.price })
