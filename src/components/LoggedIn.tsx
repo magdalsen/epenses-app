@@ -33,7 +33,7 @@ export const LoggedIn = () => {
     const expensesFilter = (year: number, income: IncomeData, sum: number) => {
         return expenses.filter((exp:ExpensesData)=>
                     (exp.created_at).includes(year.toString()) && (exp.created_at).includes(income.monthName)
-                ).map((exp:ExpensesData,i: number,array: string | any[])=>{
+                ).map((exp:ExpensesData,i: number,array: string | string[])=>{
                     let expSum = sum += exp.productPrice;
                     return <>
                         {i === array.length-1 ? <>
@@ -50,7 +50,7 @@ export const LoggedIn = () => {
         return expenses.filter((exp:ExpensesData)=>{
                         return !(createPureMonthAndYearDataFormat(exp)).includes(income.monthName + " " + year.toString())
                     }
-                ).map((_exp:ExpensesData,i: number,array: string | any[])=>{
+                ).map((_exp:ExpensesData,i: number,array: string | string[])=>{
                     return (
                         <>
                             <>{i === array.length-1 ? <>

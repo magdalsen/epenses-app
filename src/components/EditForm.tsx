@@ -12,9 +12,11 @@ import { buttonData } from "./constans/constans";
 import { InputField } from "./common/Inputs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNotificationContext } from "../context/NotificationContext";
 
 const EditForm = () => {
-    const { userId }=useUserContext();
+    const { toggleAlertSuccess, toggleAlertError } = useNotificationContext();
+    const { userId } = useUserContext();
     const queryClient = useQueryClient();
     const {id} = useParams();
     const navigate = useNavigate();
@@ -58,8 +60,9 @@ const EditForm = () => {
                         <div>
                             {expens.productLabel === id ? <SubmitButton value={buttonData.saveButton} /> :
                             <Link to={`/expenseDetails/${expens.productLabel}/edit`}>
-                                <Button colorScheme="yellow" type="button" >Edit</Button>
+                                <ConfirmButton value={buttonData.editButton} />
                             </Link>}
+                            {/* chciałabym użyć <ConfirmButton value={buttonData.deleteButton} /> czyli zgodnie z moim schematem, ale nie wiem jak przekazać funkcję onClick jako kolejny parametr */}
                             <Button colorScheme="red" type="button" onClick={()=>mutationDelete.mutate(expens.productLabel)} >Delete</Button></div>
                 </>
             )
@@ -74,7 +77,7 @@ const EditForm = () => {
     })
     const mutation = useMutation({
         mutationFn: async (values:AddExpenseData) => {
-          await updateExpense(values, id);
+          await updateExpense(values, id, toggleAlertSuccess, toggleAlertError);
           navigate(`/expenseDetails/${idToDetails}`);
         },
         onSuccess: () => {
@@ -87,7 +90,7 @@ const EditForm = () => {
 
     const mutationDelete = useMutation({
         mutationFn: (value:string) => {
-          return handleDelete(value);
+          return handleDelete(value, toggleAlertSuccess, toggleAlertError);
         },
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['expenses'] })
@@ -117,7 +120,8 @@ const EditForm = () => {
                         <h3>Add price:</h3>
                         <InputField value={inputData.priceData} />
                         <p></p>
-                        <Button type='button' colorScheme="green" onClick={()=>alert('Firstly finish edit!')}>Add</Button>
+                        {/* nie wiem jak przekazać funkcję onClick jako parametr */}
+                        <Button type='button' colorScheme="green" onClick={()=>toggleAlertError('Firstly finish edit!')}>Add</Button>
                     </form>
                 </div>
                 <div>

@@ -10,8 +10,10 @@ import { AddMonthData } from "./constans/types";
 import { SaveButton } from "./common/Buttons";
 import { formatDate, todayDate } from "./utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNotificationContext } from "../context/NotificationContext";
 
 export const AddMonthModal = () => {
+    const { toggleAlertSuccess, toggleAlertError } = useNotificationContext();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { userId }=useUserContext();
     const queryClient = useQueryClient();
@@ -39,7 +41,7 @@ export const AddMonthModal = () => {
 
     const mutation = useMutation({
       mutationFn: (values:AddMonthData) => {
-        return addMonth(values, userId)
+        return addMonth(values, userId, toggleAlertSuccess, toggleAlertError)
       },
       onSuccess: (values) => {
         queryClient.invalidateQueries({ queryKey: values })

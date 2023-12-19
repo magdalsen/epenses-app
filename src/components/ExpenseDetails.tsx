@@ -12,8 +12,10 @@ import { InputField } from "./common/Inputs";
 import { schemaAddExpense } from "./validation/validation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@chakra-ui/react";
+import { useNotificationContext } from "../context/NotificationContext";
 
 const ExpenseDetails = () => {
+    const { toggleAlertSuccess, toggleAlertError } = useNotificationContext();
     const { userId }=useUserContext();
     const {id} = useParams();
     const queryClient = useQueryClient();
@@ -54,8 +56,9 @@ const ExpenseDetails = () => {
                         <div>{expens.productPrice} zł</div>
                         <div>
                             <Link to={`/expenseDetails/${expens.productLabel}/edit`}>
-                                <Button colorScheme="yellow" type="button" >Edit</Button>
+                                <ConfirmButton value={buttonData.editButton} />
                             </Link>
+                            {/* chciałabym użyć <ConfirmButton value={buttonData.deleteButton} /> czyli zgodnie z moim schematem, ale nie wiem jak przekazać funkcję onClick jako kolejny parametr */}
                             <Button colorScheme="red" type="button" onClick={()=>mutationDelete.mutate(expens.productLabel)} >Delete</Button></div>
                 </>
             )
@@ -71,7 +74,7 @@ const ExpenseDetails = () => {
 
     const mutation = useMutation({
         mutationFn: (values:AddExpenseData) => {
-          return addExpenseIfLabelIsUnique(values, expenses, idFormat, id, userId);
+          return addExpenseIfLabelIsUnique(values, expenses, idFormat, id, userId, toggleAlertSuccess, toggleAlertError);
         },
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['expenses'] })
@@ -83,7 +86,7 @@ const ExpenseDetails = () => {
     
     const mutationDelete = useMutation({
         mutationFn: (value:string) => {
-          return handleDelete(value);
+          return handleDelete(value, toggleAlertSuccess, toggleAlertError);
         },
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['expenses'] })
@@ -137,4 +140,3 @@ const ExpenseDetails = () => {
 }
 
 export default ExpenseDetails
-// lazy loading, poprawić buttons i usunąć any, dodać kontekst notyfikacji
