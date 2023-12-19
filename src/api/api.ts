@@ -60,7 +60,7 @@ export const fetchUserData = async (userId:string) => {
 
 export const addMonth = async (values:AddMonthData, userId: string, toggleAlertSuccess: { (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (arg0: string): void; }) => {
     const dbData: (string | string[])[] = [];
-    const valuesData = (values.month).concat((values.year).toString());
+    const valuesData = values.month.concat((values.year).toString());
     const { data, error } = await supabase
     .from('income')
     .select('incomeId, monthName, year')
