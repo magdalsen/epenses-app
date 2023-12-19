@@ -13,7 +13,7 @@ import { InputField } from "./common/Inputs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const EditForm = () => {
+const EditForm = () => {
     const { userId }=useUserContext();
     const queryClient = useQueryClient();
     const {id} = useParams();
@@ -139,3 +139,5 @@ export const EditForm = () => {
         </>
     )
 }
+
+export default EditForm

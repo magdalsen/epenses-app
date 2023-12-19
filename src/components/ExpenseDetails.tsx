@@ -13,7 +13,7 @@ import { schemaAddExpense } from "./validation/validation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@chakra-ui/react";
 
-export const ExpenseDetails = () => {
+const ExpenseDetails = () => {
     const { userId }=useUserContext();
     const {id} = useParams();
     const queryClient = useQueryClient();
@@ -135,3 +135,6 @@ export const ExpenseDetails = () => {
         </>
     )
 }
+
+export default ExpenseDetails
+// lazy loading, poprawić buttons i usunąć any, dodać kontekst notyfikacji

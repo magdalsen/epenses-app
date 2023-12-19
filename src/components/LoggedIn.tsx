@@ -47,8 +47,7 @@ export const LoggedIn = () => {
     }
 
     const expensesNullFilter = (year: number, income: IncomeData) => {
-        return expenses.filter((exp:ExpensesData)=>
-                    {
+        return expenses.filter((exp:ExpensesData)=>{
                         return !(createPureMonthAndYearDataFormat(exp)).includes(income.monthName + " " + year.toString())
                     }
                 ).map((_exp:ExpensesData,i: number,array: string | any[])=>{

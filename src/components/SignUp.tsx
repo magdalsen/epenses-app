@@ -9,7 +9,7 @@ import { BackButton, SubmitButton } from "./common/Buttons";
 import { InputField } from "./common/Inputs";
 import { buttonData } from "./constans/constans";
 
-export const SignUp = () => {
+const SignUp = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignupData>({
         defaultValues: {
@@ -65,3 +65,5 @@ export const SignUp = () => {
         </form>
     )
 }
+
+export default SignUp

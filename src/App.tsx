@@ -1,12 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
-import { ExpenseDetails } from './components/ExpenseDetails';
 import { Home } from './components/Home';
 import { UserProvider } from './context/UserContext';
-import { SignUp } from './components/SignUp';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { EditForm } from './components/EditForm';
+import { Suspense, lazy } from 'react';
+
+const SignUp = lazy(() => import("./components/SignUp"));
+const ExpenseDetails = lazy(() => import("./components/ExpenseDetails"));
+const EditForm = lazy(() => import("./components/EditForm"));
 
 const queryClient=new QueryClient({
   queryCache: new QueryCache(),
@@ -28,12 +30,14 @@ function App() {
         <BrowserRouter>
           <UserProvider>
             <h1>Expenses App</h1>
+            <Suspense fallback={<h1>Still Loading…</h1>}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/expenseDetails/:id" element={<ExpenseDetails />} />
                 <Route path="/expenseDetails/:id/edit" element={<EditForm />} />
               </Routes>
+            </Suspense>
           </UserProvider>
         </BrowserRouter>
       </QueryClientProvider>
