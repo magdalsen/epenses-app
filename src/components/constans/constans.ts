@@ -37,3 +37,48 @@ export const months = [
         month: "December"
     }
 ]
+
+export const buttonData = {
+    signupButton: {
+        variant: "solid",
+        text: "Sign up",
+        colorScheme: "blue"
+    },
+    signinButton: {
+        variant: "solid",
+        text: "Login",
+        colorScheme: "blue"
+    },
+    backButton: {
+        variant: "outline",
+        text: "Back",
+        colorScheme: "blue"
+    },
+    detailsButton: {
+        variant: "solid",
+        text: "Details",
+        colorScheme: "blue"
+    },
+    saveButton: {
+        variant: "solid",
+        text: "Save",
+        colorScheme: "blue"
+    },
+    editButton: {
+        variant: "solid",
+        text: "Edit",
+        colorScheme: "blue"
+    },
+    deleteButton: {
+        variant: "solid",
+        text: "Delete",
+        colorScheme: "red"
+    },
+    addButton: {
+        variant: "solid",
+        text: "Add",
+        colorScheme: "green"
+    }
+}
+
+export const monthsListed = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

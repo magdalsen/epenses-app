@@ -3,10 +3,12 @@ import { LoggedIn } from "./LoggedIn";
 import { Login } from "./Login"
 
 export const Home = () => {
-    const { isLoggedIn }=useUserContext();
+    const { getToken }=useUserContext();
+    const token = getToken();
+
     return (
         <>
-            {isLoggedIn ? <LoggedIn /> : <Login />}
+            {token ? <LoggedIn /> : <Login />}
         </>
     )
 }
