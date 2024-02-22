@@ -7,7 +7,7 @@ import { IncomeData, ExpensesData } from "./constans/types";
 import { fetchDataByRow, fetchUserData } from "../api/api";
 import { ConfirmButton } from "./common/Buttons";
 import { expensesGetYear, formatDate } from "./utils/utils";
-import { buttonData } from "./constans/constans";
+import { buttonData, monthsListed } from "./constans/constans";
 import { useQuery } from "@tanstack/react-query";
 
 export const LoggedIn = () => {
@@ -78,7 +78,9 @@ export const LoggedIn = () => {
                 <TabPanels>
                 {years?.map((year)=>(
                     <div className={style.expenseBox_container}>
-                        {income?.filter((el:IncomeData)=>
+                        {income?.sort((a, b) => {
+                            return monthsListed.indexOf(a.monthName) - monthsListed.indexOf(b.monthName);
+                        }).filter((el:IncomeData)=>
                                 el.year === year
                         ).map((income:IncomeData)=>{
                             return (
