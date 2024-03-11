@@ -25,8 +25,8 @@ export const Login = () => {
       });
       const onSubmit = (data: LoginData) => {
         loginUser(data, toggleAlertSuccess, toggleAlertError).then((data)=>{
-            setToken(data?.session.access_token);
-            setId(data?.user.id);
+            setToken(data!.session.access_token);
+            setId(data!.user.id);
             navigate('/');
         });
       }

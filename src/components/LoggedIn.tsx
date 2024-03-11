@@ -34,7 +34,7 @@ export const LoggedIn = () => {
         let max = 0;
             return expenses.map((exp:ExpensesData,i: number,array: string | string[])=>{
                 if ((exp.created_at).includes(year.toString()) && (exp.created_at).includes(income.monthName)) {
-                    let expSum = max+=exp.productPrice;
+                    let expSum = max+=exp.productPrice;                    
                     return <>
                     {i === array.length-1 ? <>
                     <div>{expSum} zł</div><div><Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>

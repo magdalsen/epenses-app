@@ -84,7 +84,7 @@ export const addMonth = async (values:AddMonthData, userId: string, toggleAlertS
     }
 }
 
-export const addExpense = async (values:AddExpenseData, userId: string, idFormat: string | undefined, productLabel: string, toggleAlertSuccess: { (alert: string): void; (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (alert: string): void; (arg0: string): any; }) => {
+export const addExpense = async (values:AddExpenseData, userId: string, idFormat: string, productLabel: string, toggleAlertSuccess: { (alert: string): void; (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (alert: string): void; (arg0: string): any; }) => {
     const { data, error } = await supabase
     .from('expenses')
     .insert({ id: userId, productCategory: values.expense, productPrice: values.price, created_at: calculateDateForEachMonth(idFormat), productLabel: productLabel })

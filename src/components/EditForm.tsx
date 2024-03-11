@@ -18,7 +18,7 @@ const EditForm = () => {
     const { toggleAlertSuccess, toggleAlertError } = useNotificationContext();
     const { userId } = useUserContext();
     const queryClient = useQueryClient();
-    const {id} = useParams();
+    const { id } = useParams() as { id: string };
     const navigate = useNavigate();
     const idFormat = id?.replace(/-/g, ' ').slice(0,-1).trim();
     const idToDetails = id?.replace(' ', '-').slice(0,-2);

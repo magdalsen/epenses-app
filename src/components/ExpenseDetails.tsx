@@ -17,7 +17,7 @@ import { useNotificationContext } from "../context/NotificationContext";
 const ExpenseDetails = () => {
     const { toggleAlertSuccess, toggleAlertError } = useNotificationContext();
     const { userId }=useUserContext();
-    const {id} = useParams();
+    const { id } = useParams() as { id: string };
     const queryClient = useQueryClient();
     const idFormat = id?.replace('-',' ');
 

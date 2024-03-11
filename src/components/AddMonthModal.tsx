@@ -44,7 +44,7 @@ export const AddMonthModal = () => {
         return addMonth(values, userId, toggleAlertSuccess, toggleAlertError)
       },
       onSuccess: (values) => {
-        queryClient.invalidateQueries({ queryKey: values })
+        queryClient.invalidateQueries({ queryKey: values! })
       },
       onError: () => {
         throw new Error("Something went wrong :(");

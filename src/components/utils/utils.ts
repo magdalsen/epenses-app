@@ -3,9 +3,9 @@ import { AddExpenseData, ExpensesData } from "../constans/types";
 import { monthsListed } from "../constans/constans";
 import { addExpense } from "../../api/api";
 
-export const formatDate = (data:ExpensesData[]) => {
+export const formatDate = (data:ExpensesData[] | undefined | any[]) => {
     const dateArr: number[] = [];
-    data.map((el: { created_at: string; })=>{
+    data?.map((el: { created_at: string; })=>{
         const date = moment(el.created_at).utc().format('YYYY-MM-DD');
         const newDate = new Date(date);
         dateArr.push(newDate.getFullYear());
@@ -24,11 +24,11 @@ export const expensesGetYear = (data:any) => {
 
 export const todayDate = new Date().getFullYear();
 
-export const calculateDateForEachMonth = (idFormat: string | undefined) => {
+export const calculateDateForEachMonth = (idFormat: string) => {
     const todayDate = new Date();
-    const separateDate = idFormat?.split(" ");
-    separateDate[0] = monthsListed.indexOf(separateDate[0]);
-    todayDate.setMonth(separateDate[0]);
+    const separateDate = idFormat.split(" ");
+    separateDate[0] = monthsListed.indexOf(separateDate[0]).toString();
+    todayDate.setMonth(Number(separateDate[0]));
     todayDate.setFullYear(Number(separateDate[1]));
     return todayDate.toISOString();
 }
@@ -44,7 +44,7 @@ export const productArrayFiltered = (expenses: ExpensesData[], idFormat: string)
     })
 }
 
-export const addExpenseIfLabelIsUnique = (data: AddExpenseData, expenses: ExpensesData[], idFormat: string | undefined, id: string | undefined, userId: string, toggleAlertSuccess: (alert: string) => void, toggleAlertError: (alert: string) => void) => {
+export const addExpenseIfLabelIsUnique = (data: AddExpenseData, expenses: ExpensesData[], idFormat: string, id: string | undefined, userId: string, toggleAlertSuccess: (alert: string) => void, toggleAlertError: (alert: string) => void) => {
     const productArrayFilteredOnlyAccurateData = productArrayFiltered(expenses, idFormat);
     if (productArrayFilteredOnlyAccurateData.length === 0) {
         const firstProductLabel = id + "-" + "1"; // jeśli tablica jest równa 0 czyli nie ma jeszcze wydatków, to zawsze productLabel będzie z wartością 1 (np. January-2023-1)
