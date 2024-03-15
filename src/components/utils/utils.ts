@@ -48,13 +48,13 @@ export const addExpenseIfLabelIsUnique = (data: AddExpenseData, expenses: Expens
     const productArrayFilteredOnlyAccurateData = productArrayFiltered(expenses, idFormat);
     if (productArrayFilteredOnlyAccurateData.length === 0) {
         const firstProductLabel = id + "-" + "1"; // jeśli tablica jest równa 0 czyli nie ma jeszcze wydatków, to zawsze productLabel będzie z wartością 1 (np. January-2023-1)
-        return addExpense(data, userId, idFormat, firstProductLabel, toggleAlertSuccess, toggleAlertError);
+        return addExpense(data, userId, calculateDateForEachMonth(idFormat), firstProductLabel, toggleAlertSuccess, toggleAlertError);
     } else {
         productArrayFilteredOnlyAccurateData.sort((a,b)=> (a.productLabel).localeCompare(b.productLabel, undefined, { numeric: true })); // sortowanie expenses po productLabel, używam ostatniego (czyli nawiększego) aby zwiększyć wartość dodawanego elementu o +1
         const lastElement = productArrayFilteredOnlyAccurateData[productArrayFilteredOnlyAccurateData.length-1];
         const lastElementSplited = lastElement.productLabel.split('-');
         lastElementSplited[2] = (Number(lastElementSplited[2])+1).toString();
         const lastElementSplitedJoinedToLabelFormat = lastElementSplited.join('-'); // format productLabel to Month-Year-Id (np. February-2022-2, February-2022-3)
-        return addExpense(data, userId, idFormat, lastElementSplitedJoinedToLabelFormat, toggleAlertSuccess, toggleAlertError);
+        return addExpense(data, userId, calculateDateForEachMonth(idFormat), lastElementSplitedJoinedToLabelFormat, toggleAlertSuccess, toggleAlertError);
     };
 }

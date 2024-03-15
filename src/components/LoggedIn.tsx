@@ -6,33 +6,37 @@ import { AddMonthModal } from "./AddMonthModal";
 import { IncomeData, ExpensesData } from "./constans/types";
 import { fetchDataByRow, fetchUserData } from "../api/api";
 import { ConfirmButton } from "./common/Buttons";
-import { expensesGetYear, formatDate } from "./utils/utils";
+import { expensesGetYear } from "./utils/utils";
 import { buttonData, monthsListed } from "./constans/constans";
 import { useQuery } from "@tanstack/react-query";
+import { useNotificationContext } from "../context/NotificationContext";
 
 export const LoggedIn = () => {
+    const { toggleAlertError } = useNotificationContext();
     const { logOut, userId }=useUserContext();
 
-    const { data:years, isLoading, error} = useQuery({
-        queryKey: ['years'],
-        queryFn: () => fetchDataByRow(userId).then((data)=>{
-            return formatDate(data)
-        })
-    })
-    const { data:expenses } = useQuery({
+    const { data:expenses, isLoading, error } = useQuery({
         queryKey: ['expenses'],
-        queryFn: () => fetchDataByRow(userId).then((data)=>{
+        queryFn: () => fetchDataByRow(userId, toggleAlertError).then((data)=>{
             return expensesGetYear(data)
         })
     })
     const { data:income } = useQuery({
-        queryFn: () => fetchUserData(userId),
+        queryFn: () => fetchUserData(userId, toggleAlertError),
         queryKey: ['income']
     })
+    
+    const removeDuplicatedData = (years:IncomeData[]) => {
+        const arr: number[] = [];
+        years?.map((el)=>{
+            arr.push(el.year)
+        })
+        return [...new Set(arr)]
+    }
 
     const expensesFilter = (year: number, income: IncomeData) => {
         let max = 0;
-            return expenses.map((exp:ExpensesData,i: number,array: string | string[])=>{
+            return expenses?.map((exp:ExpensesData,i: number,array: string | string[])=>{
                 if ((exp.created_at).includes(year.toString()) && (exp.created_at).includes(income.monthName)) {
                     let expSum = max+=exp.productPrice;                    
                     return <>
@@ -71,14 +75,14 @@ export const LoggedIn = () => {
 
             <Tabs variant='enclosed' maxW='800px'>
                 <TabList>
-                    {years?.map((year)=>(
+                    {removeDuplicatedData(income)?.map((year)=>(
                         <Tab>{year}</Tab>
                     ))}
                 </TabList>
                 <TabPanels>
-                {years?.map((year)=>(
+                {removeDuplicatedData(income)?.map((year)=>(
                     <div className={style.expenseBox_container}>
-                        {income?.sort((a, b) => {
+                        {income?.sort((a: { monthName: string; }, b: { monthName: string; }) => {
                             return monthsListed.indexOf(a.monthName) - monthsListed.indexOf(b.monthName);
                         }).filter((el:IncomeData)=>
                                 el.year === year

@@ -7,6 +7,7 @@ import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-qu
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Suspense, lazy } from 'react';
 import { NotificationProvider } from './context/NotificationContext';
+import { ConfirmPage } from './components/ConfirmPage';
 
 const SignUp = lazy(() => import("./components/SignUp"));
 const ExpenseDetails = lazy(() => import("./components/ExpenseDetails"));
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/expenseDetails/:id" element={<ExpenseDetails />} />
                   <Route path="/expenseDetails/:id/edit" element={<EditForm />} />
+                  <Route path="/confirm" element={<ConfirmPage />} />
                 </Routes>
               </Suspense>
             </UserProvider>
