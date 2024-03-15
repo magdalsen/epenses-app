@@ -24,7 +24,7 @@ export const addUser = async (values:SignupData, toggleAlertSuccess: { (alert: s
       }
 }
 
-export const addUserToTable = async (values: any, data: any, toggleAlertError: { (alert: string): void; (arg0: string): void; (arg0: string): void; }, toggleAlertSuccess: ((arg0: string) => void)) => {
+export const addUserToTable = async (values: SignupData, data: { user: { id: string } }, toggleAlertError: { (alert: string): void; (arg0: string): void; (arg0: string): void; }, toggleAlertSuccess: ((arg0: string) => void)) => {
     try {
                 const response = await fetch('http://localhost:8000/addUser', {
                   method: 'POST',
@@ -68,8 +68,6 @@ export const loginUser = async (values:LoginData, toggleAlertSuccess: { (alert: 
             toggleAlertSuccess(`Hello ${email}!`);
             return data
         }
-        // toggleAlertSuccess(`Hello ${email}!`);
-        // return data
       } catch (error) {
         console.error('Error fetching data:', error);
         toggleAlertError(`Some error occured: ${error}. Please contact with administrator.`);
@@ -83,7 +81,7 @@ export const fetchDataByRow = async (userId: string, toggleAlertError: { (alert:
         throw new Error('Network response was not ok');
       }
   
-      return response.json(); // data from server
+      return response.json();
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -206,7 +204,7 @@ export const handleDelete = async (productLabel: string, toggleAlertSuccess: { (
           throw new Error('Network response was not ok');
         }
         toggleAlertSuccess('Data deleted!');
-        return response.json(); // data from server
+        return response.json();
   
       } catch (error) {
         console.error('Error fetching data:', error);

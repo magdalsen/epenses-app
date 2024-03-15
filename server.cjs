@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
-// const calculateDateForEachMonth = require('./src/components/utils/utils.ts');
 const port = process.env.PORT;
 const supabaseUrl = process.env.VITE_URL;
 const supabaseKey = process.env.VITE_KEY;
@@ -22,7 +21,7 @@ app.use(cors({
   credentials: true,
 }));
 
-// Żądania, które pobierają dane z bazy Supabase
+// Żądania, które komunikują się z bazą Supabase
 app.get('/expenses/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
