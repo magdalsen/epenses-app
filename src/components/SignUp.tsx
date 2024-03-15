@@ -23,8 +23,7 @@ const SignUp = () => {
         resolver: yupResolver(schemaSignup)
       });
       const onSubmit = (data: SignupData) => {
-        addUser(data, toggleAlertSuccess, toggleAlertError);
-        navigate('/confirm');
+        addUser(data, toggleAlertSuccess, toggleAlertError, navigate);
       }
 
       const inputData = {
