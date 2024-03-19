@@ -12,8 +12,8 @@ export const Slider = (maxExpense: { value: number; }) => {
         <RangeSliderTrack bg='red.100'>
             <RangeSliderFilledTrack bg='tomato' />
         </RangeSliderTrack>
-        <RangeSliderThumb index={0} />
-        <RangeSliderThumb index={1} />
+        <RangeSliderThumb boxSize={10} index={0} />
+        <RangeSliderThumb boxSize={10} index={1} />
         </RangeSlider>
     )
 }
