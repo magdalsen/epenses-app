@@ -32,6 +32,13 @@ export const LoggedIn = () => {
 
     const expensesFilter = (year: number, income: IncomeData) => {
         let max = 0;
+        if (expenses.length === 0) {
+            return <>
+            <div className={style.boxAvailable}>0 zł</div><div><Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>
+            <ConfirmButton value={buttonData.detailsButton} />
+            </Link></div>
+            </>
+        } else if (expenses.length > 0) {
             return expenses.map((exp:ExpensesData,i: number,array: string | string[])=>{
                 if ((exp.created_at).includes(year.toString()) && (exp.created_at).includes(income.monthName)) {
                     let expSum = max+=exp.productPrice;                    
@@ -54,6 +61,7 @@ export const LoggedIn = () => {
                 }
             }
             )
+        }
     }
 
     if (isLoading) {
