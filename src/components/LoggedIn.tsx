@@ -10,10 +10,14 @@ import { expensesGetYear } from "./utils/utils";
 import { buttonData, monthsListed } from "./constans/constans";
 import { useQuery } from "@tanstack/react-query";
 import { useNotificationContext } from "../context/NotificationContext";
+import { Slider } from "./Slider";
+import { useEffect, useState } from "react";
 
 export const LoggedIn = () => {
     const { toggleAlertError } = useNotificationContext();
-    const { logOut, userId }=useUserContext();
+    const { logOut, userId, filter }=useUserContext();
+    const [ maxExpense, setMaxExpense ] = useState<number>(0);
+    let arr: number[] = [];
 
     const { data:expenses, isLoading, error } = useQuery({
         queryKey: ['expenses'],
@@ -38,10 +42,11 @@ export const LoggedIn = () => {
         let max = 0;
             return expenses?.map((exp:ExpensesData,i: number,array: string | string[])=>{
                 if ((exp.created_at).includes(year.toString()) && (exp.created_at).includes(income.monthName)) {
-                    let expSum = max+=exp.productPrice;                    
+                    let expSum = max+=exp.productPrice;
+                    arr.push(expSum);
                     return <>
-                    {i === array.length-1 ? <>
-                    <div>{expSum} zł</div><div><Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>
+                    {i === array.length-1 && expSum <= filter[1] && expSum >= filter[0] ? <>
+                    <div className={style.boxAvailable}>{expSum} zł</div><div><Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>
                     <ConfirmButton value={buttonData.detailsButton} />
                     </Link></div>
                     </> : <></>}
@@ -49,8 +54,8 @@ export const LoggedIn = () => {
                 } else {
                     let expSum = max+=0;
                     return <>
-                    {i === array.length-1 ? <>
-                    <div>{expSum} zł</div><div><Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>
+                    {i === array.length-1 && expSum <= filter[1] && expSum >= filter[0] ? <>
+                    <div className={style.boxAvailable}>{expSum} zł</div><div><Link to={`/expenseDetails/${income.monthName}-${year.toString()}`}>
                     <ConfirmButton value={buttonData.detailsButton} />
                     </Link></div>
                     </> : <></>}
@@ -59,6 +64,18 @@ export const LoggedIn = () => {
             }
             )
     }
+
+    useEffect(()=>{
+        let max = 0;
+        let arr2 = [];
+        for (let key in arr) {
+            if (arr[key] > max) {
+                max = arr[key];
+                arr2.push(max);
+            }
+          }
+        setMaxExpense(max);
+    },[arr, filter])
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -79,6 +96,10 @@ export const LoggedIn = () => {
                         <Tab>{year}</Tab>
                     ))}
                 </TabList>
+                <div>
+                    <div>Expenses filter:</div>
+                    <Slider value={maxExpense} />
+                </div>
                 <TabPanels>
                 {removeDuplicatedData(income)?.map((year)=>(
                     <div className={style.expenseBox_container}>

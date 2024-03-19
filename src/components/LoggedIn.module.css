@@ -10,3 +10,13 @@
     flex-wrap: wrap;
     align-items: flex-start;
 }
+
+.boxAvailable {
+    opacity: 0.5;
+    color: green;
+}
+
+.boxNotAvailable {
+    opacity: 0.5;
+    color: red;
+}
