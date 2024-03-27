@@ -1,8 +1,15 @@
 # Expenses App
 
+## Technology
+
+- ReactJS + Vite + JS/TS
+- Express
+- Supabase
+
 ## Run
 
-- Local: npm install, npm run dev
+- Local: npm install, npm start
+- Deploy: https://epenses-app.vercel.app/
 
 ## Author
 

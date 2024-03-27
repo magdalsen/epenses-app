@@ -34,7 +34,7 @@ export const AddMonthModal = () => {
       
     const { data:years, isLoading, error} = useQuery({
       queryKey: ['years'],
-      queryFn: () => fetchDataByRow(userId).then((data)=>{
+      queryFn: () => fetchDataByRow(userId, toggleAlertError).then((data)=>{
           return formatDate(data)
       })
     })

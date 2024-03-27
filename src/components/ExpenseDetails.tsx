@@ -67,7 +67,7 @@ const ExpenseDetails = () => {
 
     const { data:expenses, isLoading, error } = useQuery({
         queryKey: ['expenses'],
-        queryFn: () => fetchDataByRow(userId).then((data)=>{
+        queryFn: () => fetchDataByRow(userId, toggleAlertError).then((data)=>{
             return expensesGetYear(data)
         })
     })

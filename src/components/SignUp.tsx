@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Signup.module.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaSignup } from "./validation/validation";
@@ -12,6 +12,7 @@ import { useNotificationContext } from "../context/NotificationContext";
 
 const SignUp = () => {
     const { toggleAlertSuccess, toggleAlertError } = useNotificationContext();
+    const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors } } = useForm<SignupData>({
         defaultValues: {
           name: '',
@@ -22,7 +23,7 @@ const SignUp = () => {
         resolver: yupResolver(schemaSignup)
       });
       const onSubmit = (data: SignupData) => {
-        addUser(data, toggleAlertSuccess, toggleAlertError);
+        addUser(data, toggleAlertSuccess, toggleAlertError, navigate);
       }
 
       const inputData = {
