@@ -50,7 +50,7 @@ app.get('/getMonths', async (req, res) => {
   try {
     const userId = req.params.userId;
     const { data, error } = await supabase.from('income')
-    .select('incomeId, monthName, year')
+    .select('incomeId, monthName, year, id')
     if (error) throw error;
     res.json(data);    
   } catch (error) {
@@ -85,11 +85,13 @@ app.post('/updateExpense', async (req, res) => {
     const expense = req.body.values.expense;
     const price = req.body.values.price;
     const id = req.body.id;
+    const userId = req.body.userId;
 
     const { data, error } = await supabase
     .from('expenses')
     .update({ productCategory: expense, productPrice: price })
     .eq('productLabel', id)
+    .eq('id', userId)
     .select()
     if (error) throw error;
     res.json(data);
@@ -107,11 +109,12 @@ app.post('/addMonth', async (req, res) => {
     const income = req.body.values.income;
     const month = req.body.values.month;
     const year = req.body.values.year;
+    const id = req.body.values.id;
 
     const { data, error } = await supabase
     .from('income')
     .insert([
-      { id: userId, incomeId: dataIncome.length+1, monthIncome: income, monthName: month, year: year }
+      { id: userId, incomeId: dataIncome.length+2, monthIncome: income, monthName: month, year: year }
     ])
     if (error) throw error;
     res.json(data);
@@ -183,11 +186,13 @@ app.post('/addUser', async (req, res) => {
 app.delete('/deleteExpense/:productLabel', async (req, res) => {
   try {
     const productLabel = req.params.productLabel;
+    const userId = req.query.userId;
 
     const { error } = await supabase
     .from('expenses')
     .delete()
     .eq('productLabel', productLabel)
+    .eq('id', userId)
     if (error) throw error;
     res.status(200).json({ message: 'Record deleted successfully!' });
     

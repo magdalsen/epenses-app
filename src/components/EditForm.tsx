@@ -77,7 +77,7 @@ const EditForm = () => {
     })
     const mutation = useMutation({
         mutationFn: async (values:AddExpenseData) => {
-          await updateExpense(values, id, toggleAlertSuccess, toggleAlertError);
+          await updateExpense(values, id, userId, toggleAlertSuccess, toggleAlertError);
           navigate(`/expenseDetails/${idToDetails}`);
         },
         onSuccess: () => {
@@ -90,7 +90,7 @@ const EditForm = () => {
 
     const mutationDelete = useMutation({
         mutationFn: (value:string) => {
-          return handleDelete(value, toggleAlertSuccess, toggleAlertError);
+          return handleDelete(value, userId, toggleAlertSuccess, toggleAlertError);
         },
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['expenses'] })

@@ -111,6 +111,8 @@ export const fetchUserData = async (userId: string, toggleAlertError: ((arg0: st
 export const addMonth = async (values:AddMonthData, userId: string, toggleAlertSuccess: { (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (arg0: string): void; }) => {
     const dbData: (string | string[])[] = [];
     const valuesData = values.month.concat((values.year).toString());
+    const valuesDataWithUserId = valuesData.concat(userId);
+
     try {
         const response = await fetch(`${PATH}/getMonths`);
         if (!response.ok) {
@@ -118,10 +120,11 @@ export const addMonth = async (values:AddMonthData, userId: string, toggleAlertS
         }
     
         const data = await response.json();
-        data.map(async (el: { monthName: string; year: number; })=>{
-            dbData.push((el.monthName).concat(el.year.toString()));
+        data.map(async (el: { id: string; monthName: string; year: number; })=>{
+            dbData.push((el.monthName).concat(el.year.toString()).concat(el.id));
         })
-        const check = dbData.includes(valuesData);
+        const check = dbData.includes(valuesDataWithUserId);
+        
         if (check) {
             toggleAlertError('Month already exist!');
             return
@@ -176,14 +179,14 @@ export const addExpense = async (values:AddExpenseData, userId: string, idFormat
     }
 }
 
-export const updateExpense = async (values: AddExpenseData, id: string | undefined, toggleAlertSuccess: { (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (arg0: string): any; }) => {
+export const updateExpense = async (values: AddExpenseData, id: string | undefined, userId: string, toggleAlertSuccess: { (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (arg0: string): any; }) => {
     try {
       const response = await fetch(`${PATH}/updateExpense`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ values, id }),
+        body: JSON.stringify({ values, id, userId }),
       });
   
       if (!response.ok) {
@@ -199,11 +202,11 @@ export const updateExpense = async (values: AddExpenseData, id: string | undefin
     }
 }
 
-export const handleDelete = async (productLabel: string, toggleAlertSuccess: { (alert: string): void; (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (alert: string): void; (arg0: string): any; }) => {
+export const handleDelete = async (productLabel: string, userId: string, toggleAlertSuccess: { (alert: string): void; (alert: string): void; (arg0: string): void; }, toggleAlertError: { (alert: string): void; (alert: string): void; (arg0: string): any; }) => {
     try {
-        const response = await fetch(`${PATH}/deleteExpense/${productLabel}`, {
+        const response = await fetch(`${PATH}/deleteExpense/${productLabel}?userId=${userId}`, {
             method: 'DELETE'
-        });
+        });        
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
