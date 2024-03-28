@@ -39,8 +39,8 @@ export const createPureMonthAndYearDataFormat = (exp: ExpensesData) => {
 }
 
 export const productArrayFiltered = (expenses: ExpensesData[], idFormat: string) => {
-    return expenses.filter((exp:ExpensesData)=>{
-        return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
+        return expenses.filter((exp:ExpensesData)=>{
+        return createPureMonthAndYearDataFormat(exp).includes(idFormat);
     })
 }
 

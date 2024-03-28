@@ -10,10 +10,14 @@ import { expensesGetYear } from "./utils/utils";
 import { buttonData, monthsListed } from "./constans/constans";
 import { useQuery } from "@tanstack/react-query";
 import { useNotificationContext } from "../context/NotificationContext";
+import { Slider } from "./Slider";
+import { useEffect, useState } from "react";
 
 export const LoggedIn = () => {
     const { toggleAlertError } = useNotificationContext();
-    const { logOut, userId }=useUserContext();
+    const { logOut, userId, filter }=useUserContext();
+    const [ maxExpense, setMaxExpense ] = useState<number>(0);
+    let arr: number[] = [];
 
     const { data:expenses, isLoading, error } = useQuery({
         queryKey: ['expenses'],
@@ -69,6 +73,18 @@ export const LoggedIn = () => {
         }
     }
 
+    useEffect(()=>{
+        let max = 0;
+        let arr2 = [];
+        for (let key in arr) {
+            if (arr[key] > max) {
+                max = arr[key];
+                arr2.push(max);
+            }
+          }
+        setMaxExpense(max);
+    },[arr, filter])
+
     if (isLoading) {
         return <div>Loading...</div>
     }
@@ -88,6 +104,10 @@ export const LoggedIn = () => {
                         <Tab>{year}</Tab>
                     ))}
                 </TabList>
+                <div>
+                    <div>Expenses filter:</div>
+                    <Slider value={maxExpense} />
+                </div>
                 <TabPanels>
                 {removeDuplicatedData(income)?.map((year)=>(
                     <div className={style.expenseBox_container}>

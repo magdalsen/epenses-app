@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 import { supabase } from "../supabaseClient";
 
@@ -11,6 +11,8 @@ type UserContextProps={
     setToken: (token:string)=>void;
     getToken: ()=>string | null;
     setId: (id:string)=>void;
+    setFilter: Dispatch<SetStateAction<number[]>>;
+    filter: number[];
     userId: string;
 }
 
@@ -19,6 +21,7 @@ export const UserContext=createContext<UserContextProps|null>(null)
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { toggleAlertSuccess } = useNotificationContext();
   const [userId, setId] = useState('');
+  const [ filter, setFilter ] = useState<number[]>([0, 9999999999999]);
   const navigate = useNavigate();
 
   const setToken = (userToken: string) => {
@@ -40,7 +43,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     return (
-      <UserContext.Provider value={{ setToken, getToken, logOut, setId, userId }}>
+      <UserContext.Provider value={{ setToken, getToken, logOut, setId, setFilter, filter, userId }}>
         {children}
       </UserContext.Provider>
     );

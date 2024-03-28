@@ -47,8 +47,8 @@ const ExpenseDetails = () => {
 
     const expensesFilter = () => {
         return expenses.filter((exp:ExpensesData)=>{
-            return (createPureMonthAndYearDataFormat(exp)).includes(idFormat);
-        }).map((expens:ExpensesData,i: number)=>{                    
+            return createPureMonthAndYearDataFormat(exp).includes(idFormat);
+        }).map((expens:ExpensesData,i: number)=>{    
             return (
                 <>
                         <div>{i+1}</div>
@@ -86,7 +86,7 @@ const ExpenseDetails = () => {
     
     const mutationDelete = useMutation({
         mutationFn: (value:string) => {
-          return handleDelete(value, toggleAlertSuccess, toggleAlertError);
+          return handleDelete(value, userId, toggleAlertSuccess, toggleAlertError);
         },
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['expenses'] })
