@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "start:build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start:react": "npm run dev",
     "start:express": "node server.cjs",
-    "start": "concurrently \"npm run start:react\" \"npm run start:express\""
+    "start": "concurrently \"npm run start:react\" \"npm run start:express\"",
+    "startProd": "concurrently \"npm run start:build\" \"npm run start:express\""
   },
   "proxy": "http://localhost:8000",
   "dependencies": {
