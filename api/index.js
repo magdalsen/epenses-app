@@ -16,7 +16,12 @@ const supabase = createClient(
 
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({ origin: '*' }))
+
+// app.use(cors({
+//   origin: 'https://expenses-app-client-bay.vercel.app', // Adres URL frontendu
+//   credentials: true,
+// }));
 
 // Żądania, które komunikują się z bazą Supabase
 app.get('/expenses/:userId', async (req, res) => {
