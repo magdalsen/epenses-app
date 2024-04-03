@@ -8,6 +8,8 @@ const supabaseKey = process.env.KEY;
 
 const { createClient } = require('@supabase/supabase-js');
 
+app.use(cors({ origin: '*' }))
+
 // Inicjacja Supabase klienta
 const supabase = createClient(
     supabaseUrl,
@@ -15,8 +17,6 @@ const supabase = createClient(
 );
 
 app.use(express.json());
-
-app.use(cors({ origin: '*' }))
 
 // app.use(cors({
 //   origin: 'https://expenses-app-client-bay.vercel.app', // Adres URL frontendu
@@ -206,6 +206,11 @@ app.delete('/deleteExpense/:productLabel', async (req, res) => {
 
 app.get('/', (req, res) => {
   res.send('Hello from Express!');
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
 
 app.listen(port, () => {
