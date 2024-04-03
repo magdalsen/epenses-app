@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT;
-const supabaseUrl = process.env.VITE_URL;
-const supabaseKey = process.env.VITE_KEY;
+const supabaseUrl = process.env.URL;
+const supabaseKey = process.env.KEY;
 
 const { createClient } = require('@supabase/supabase-js');
 
