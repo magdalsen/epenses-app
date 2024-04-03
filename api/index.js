@@ -16,10 +16,7 @@ const supabase = createClient(
 
 app.use(express.json());
 
-app.use(cors({
-  origin: 'http://localhost:8080', // Adres URL frontendu
-  credentials: true,
-}));
+app.use(cors());
 
 // Żądania, które komunikują się z bazą Supabase
 app.get('/expenses/:userId', async (req, res) => {
