@@ -3,13 +3,13 @@
 ## Technology
 
 - ReactJS + Vite + JS/TS
+- ChakraUI
 - Express
 - Supabase
 
 ## Run
 
 - Local: npm install, npm start
-- Deploy: https://epenses-app.vercel.app/
 
 ## Author
 
